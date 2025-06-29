@@ -24,6 +24,7 @@ class just_parse:
         budget_parser.add_argument('--amount',type=int)
         #save parser
         save_parser=subparser.add_parser('save')
+        save_parser.add_argument('--name')
         #update parser
         update_parser=subparser.add_parser('update')
         update_parser.add_argument('--id',required=True)
