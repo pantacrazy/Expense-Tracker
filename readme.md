@@ -30,21 +30,21 @@ Basic Operations
 
 
 # Add an expense
-python expense_tracker.py add --desc "Groceries" --amount 50 --category "Food"
+python main.py add --desc "Groceries" --amount 50 --category "Food"
 
 # List all expenses
-python expense_tracker.py list
+python main.py.py list
 
 # Update an expense
-python expense_tracker.py update --id 1 --amount 55
+python main.py.py update --id 1 --amount 55
 
 # Delete an expense
-python expense_tracker.py delete --id 1
+python main.py.py delete --id 1
 
 Budget Management
 
 # Set monthly budget (month as number 01-12)
-python expense_tracker.py set_budget --month 06 --amount 1000
+python main.py.py set_budget --month 06 --amount 1000
 
 # Will display alerts like:
 # "You have reached 1.0% of your 06 month budget (1000)"
@@ -52,13 +52,13 @@ python expense_tracker.py set_budget --month 06 --amount 1000
 Data Analysis
 
 # View summary
-python expense_tracker.py summary
+python main.py.py summary
 
 # Filter by month (numeric)
-python expense_tracker.py summary --month 06
+python main.py.py summary --month 06
 
 # Export to CSV
-python expense_tracker.py save --name expenses.csv
+python main.py.py save --name expenses.csv
 
 Technical Details
 
@@ -87,14 +87,14 @@ Example Workflow
     Set a June budget:
 
 
-python expense_tracker.py set_budget --month 06 --amount 1000
+python main.py.py set_budget --month 06 --amount 1000
 
     Add some expenses:
 
-python expense_tracker.py add --desc "Rent" --amount 800
-python expense_tracker.py add --desc "Food" --amount 200
+python main.py.py add --desc "Rent" --amount 800
+python main.py.py add --desc "Food" --amount 200
 
     Check your status:
 
-python expense_tracker.py summary --month 06
+python main.py.py summary --month 06
 Output: "You have reached 100.0% of your 06 month budget (1000)"
