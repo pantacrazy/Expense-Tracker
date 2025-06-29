@@ -1,58 +1,104 @@
 import argparse
 from cvi_handler import data_processing
-commands=['add','list','summary','delete','update','save']
 class just_parse:
     def __init__(self):
         parser =argparse.ArgumentParser(prog="Expense Tracker",description="A simple expense tracker to manage your finances")
-        parser.add_argument('command')
-        parser.add_argument('--description')
-        parser.add_argument('--amount')
-        parser.add_argument('--id')
-        parser.add_argument('--month')
-        parser.add_argument('--name')
+        subparser=parser.add_subparsers(dest='command')
+        #add parser
+        add_parser=subparser.add_parser('add')
+        add_parser.add_argument('--description',required=True)
+        add_parser.add_argument('--amount',required=True,type=int)
+        add_parser.add_argument('--category')
+        #list parser
+        list_parser=subparser.add_parser('list')
+        list_parser.add_argument('--category')
+        #summary parser
+        summary_parser=subparser.add_parser('summary')
+        summary_parser.add_argument('--month',type=self.int_1_12)
+        #delete parser
+        delete_parser=subparser.add_parser('delete')
+        delete_parser.add_argument('--id',required=True,type=int)
+        #budget parser
+        budget_parser=subparser.add_parser('set_budget')
+        budget_parser.add_argument('--month',type=self.int_1_12)
+        budget_parser.add_argument('--amount',type=int)
+        #save parser
+        save_parser=subparser.add_parser('save')
+        #update parser
+        update_parser=subparser.add_parser('update')
+        update_parser.add_argument('--id',required=True)
+        update_parser.add_argument('--amount',type=int)
+        update_parser.add_argument('--category')
+        update_parser.add_argument('--description')
+        #parse
         self.args=parser.parse_args()
     def identify_command(self):
-        if self.args.command not in commands:
-            print("Incorrect Command")
-        else:
-            match self.args.command:
-                case 'add':
-                    self.add_expense()
-                case 'list':
-                    self.list()
-                case 'summary':
-                    self.summary()
-                case 'delete':
-                    self.delete()
-                case 'save':
-                    self.save()
+        match self.args.command:
+            case 'add':
+                self.add_expense()
+            case 'list':
+                self.list()
+            case 'summary':
+                self.summary()
+            case 'delete':
+                self.delete()
+            case 'save':
+                self.save()
+            case 'set-budget':
+                self.set_budget()
+            case 'update':
+                self.update()
     def add_expense(self):
-        if not (self.args.id or self.args.month or self.args.name):
-            if not self.args.description:
-                print("Missing description")
-            else:
-                if not self.args.amount:
-                    print('Missing amount')
-                else:
-                    data=data_processing()
-                    data.add(self.args.description,self.args.amount)
+        data=data_processing()
+        if self.args.category:
+            category=self.args.category
         else:
-            print("Command not allowed")
+            category=None
+        data.add(self.args.description,self.args.amount,category)
     def list(self):
         data=data_processing()
-        data.list()
+        if self.args.category:
+            data.list(self.args.category)
+        else:
+            data.list()
     def summary(self):
         data=data_processing()
         if self.args.month:
-            data.summary(self.args.month)
+            print (data.summary(self.args.month))
         else:
-            data.summary()
+           print(data.summary())
     def delete(self):
-        if not self.args.id:
-            print("Missing id")
-        else:
-            data=data_processing()
-            data.delete(self.args.id)
+        data=data_processing()
+        data.delete(self.args.id)
     def save(self):
         data=data_processing()
         data.save(self.args.name)
+    def set_budget(self):
+        data=data_processing()
+        data.set_budget(self.args.month,self.args.amount)
+    def update(self):
+        data=data_processing()
+        if self.args.description or self.args.amount or self.args.category:
+            if self.args.description:
+                description=self.args.description
+            else:
+                description=None
+            if self.args.amount:
+                amount=self.args.amount
+            else:
+                amount=None
+            if self.args.category:
+                category=self.args.category
+            else:
+                category=None
+            data.update(self.args.id,description,amount,category)
+        else:
+            print('Missing Arguments')
+    def int_1_12(self,value):
+        try:
+            num=int(value)
+        except ValueError:
+            raise argparse.ArgumentTypeError('Not a number')
+        if num<1 or num>12:
+            raise argparse.ArgumentTypeError('Not a number between 1 and 12')
+        return num
